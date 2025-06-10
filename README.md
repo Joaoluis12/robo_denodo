@@ -38,7 +38,9 @@ pip install python-dotenv pyodbc pandas openpyxl
 
 ## Como Usar
 Execute o script principal:
-```python scripts/extrair_dados.py```
+```bash
+python scripts/extrair_dados.py
+```
 
 O script irá:
 - Conectar ao Denodo usando as credenciais do .env.
