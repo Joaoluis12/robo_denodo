@@ -1,16 +1,11 @@
 from dotenv import load_dotenv
 import os
 import pyodbc
+
 # Caminho absoluto ou relativo para o .env
+load_dotenv(dotenv_path='config/.env')
 
-from pathlib import Path
-env_path = Path(__file__).resolve().parent.parent / 'config' / '.env'
-load_dotenv(dotenv_path=env_path)
-
-
-load_dotenv()
-
-uid = os.getenv("UID")
+uid = os.getenv("LDAP_USER")
 pwd = os.getenv("PWD")
 
 
@@ -23,7 +18,6 @@ conn_str = (
     f"PWD={pwd}"
 )
 
-print(pwd)
 
 try:
     conn = pyodbc.connect(conn_str)
