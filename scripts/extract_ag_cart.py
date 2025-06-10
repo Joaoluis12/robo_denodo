@@ -53,13 +53,23 @@ def main():
         with conectar_denodo(usuario, senha) as conn:
             cursor = conn.cursor()
             query = """
-                SELECT 
-                    carteira_por_gestor.coop AS coop,
-                    carteira_por_gestor.cod_ua AS cod_ua,
-                    carteira_por_gestor.cod_carteira AS cod_carteira,
-                    carteira_por_gestor.des_carteira AS des_carteira,
-                    carteira_por_gestor.des_gestor AS des_gestor
-                FROM carteira_por_gestor
+                SELECT
+                    ag_cart.ano_mes_data AS ano_mes_data,
+                    ag_cart.competencia AS competencia,
+                    ag_cart.coop AS coop,
+                    ag_cart.agencia AS agencia,
+                    ag_cart.carteira AS carteira,
+                    ag_cart.des_pessoa AS des_pessoa,
+                    ag_cart.des_produto AS des_produto,
+                    ag_cart.des_produto2 AS des_produto2,
+                    ag_cart.vlr_planejado AS vlr_planejado,
+                    ag_cart.vlr_realizado AS vlr_realizado,
+                    ag_cart.vlr_dif AS vlr_dif,
+                    ag_cart.vlr_realizado_saldo AS vlr_realizado_saldo,
+                    ag_cart.qt_produto AS qt_produto,
+                    ag_cart.central AS central
+                FROM ag_cart
+                WHERE ano_mes > 202412
             """
             df = executar_consulta(cursor, query)
             print(f"📊 Dados carregados: {df.shape[0]} linhas, {df.shape[1]} colunas.")
@@ -67,7 +77,7 @@ def main():
             salvar_excel(
                 df,
                 caminho=r"C:\Users\joao_loliveira\OneDrive - Sicredi\Power BI 4501 - Geral\Bases Denodo RPA",
-                nome_arquivo="carteira_por_gestor"
+                nome_arquivo="ag_cart_2025"
             )
 
     except Exception as e:
