@@ -2,7 +2,7 @@ import os
 import pyodbc
 import pandas as pd
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def carregar_credenciais(env_path="config/.env"):
     load_dotenv(dotenv_path=env_path)
@@ -32,20 +32,22 @@ def executar_consulta(cursor, query):
     return pd.DataFrame(dados, columns=colunas)
 
 def salvar_por_agencia(df):
-    data_hoje = datetime.today().strftime('%Y-%m-%d')
+    data_hoje = datetime.today().strftime('%d-%m-%Y')
+    data_ontem = (datetime.today() - timedelta(days=1)).strftime('%d-%m-%Y')
     base_path = r"C:\Users\joao_loliveira\OneDrive - Sicredi\INAD - Relatórios Denodo - Base 4501"
 
     for agencia in df['cod_agencia'].unique():
         df_agencia = df[df['cod_agencia'] == agencia]
-        caminho = os.path.join(base_path, f"{agencia}_RPA")
-        nome_arquivo = f"BASE_INADIMPLENTES_{data_hoje}.xlsx"
-        caminho_arquivo = os.path.join(caminho, nome_arquivo)
+        pasta_agencia = os.path.join(base_path, f"{agencia}_RPA")
 
-        try:
-            df_agencia.to_excel(caminho_arquivo, index=False, engine="openpyxl")
-            print(f"✅ Arquivo salvo para agência {agencia}: {caminho_arquivo}")
-        except Exception as e:
-            print(f"❌ Erro ao salvar arquivo para agência {agencia}: {e}")
+        arquivo_ontem = os.path.join(pasta_agencia, f"BASE_INADIMPLENTES_{data_ontem}.xlsx")
+        if os.path.exists(arquivo_ontem):
+            os.remove(arquivo_ontem)
+            print(f"🗑️ Arquivo antigo removido: {arquivo_ontem}")
+
+        arquivo_hoje = os.path.join(pasta_agencia, f"BASE_INADIMPLENTES_{data_hoje}.xlsx")
+        df_agencia.to_excel(arquivo_hoje, index=False, engine="openpyxl")
+        print(f"✅ Novo arquivo salvo: {arquivo_hoje}")
 
 def main():
     try:
