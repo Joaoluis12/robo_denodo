@@ -16,7 +16,7 @@ def log_error(msg):
 def configurar_logging(pasta_logs, nome_base):
     if not os.path.exists(pasta_logs):
         os.makedirs(pasta_logs)
-    data_str = date.today().strftime("%Y%m%d")
+    data_str = date.today().strftime("%d_%m_%Y")
     log_path = os.path.join(pasta_logs, f"{nome_base}_{data_str}.log")
     logging.basicConfig(
         filename=log_path,
@@ -61,9 +61,9 @@ def salvar_excel(df, caminho, nome_arquivo):
         log_error("❌ Erro: módulo 'openpyxl' não encontrado. Instale com: pip install openpyxl")
 
 def main():
-    pasta_saida = r"C:\Users\joao_loliveira\OneDrive - Sicredi\Power BI 4501 - Geral\Bases Denodo RPA"
+    pasta_saida = r"C:\Users\joao_loliveira\OneDrive - Sicredi\Marina Rocha da Silva - CSC - Centro de Serviços Compartilhados 4501\CONFERÊNCIA CADASTRO - ABERTURA PLATAFORMA\2025\Conferência Aberturas Plataforma - RPA"
     pasta_logs = os.path.join(pasta_saida, "logs")
-    nome_base = "contas_correntes_abertas"
+    nome_base = "contas_correntes_abertas_plataforma"
     configurar_logging(pasta_logs, nome_base)
 
     try:
@@ -93,7 +93,7 @@ def main():
             df = executar_consulta(cursor, query)
             log_info(f"📊 Dados carregados: {df.shape[0]} linhas, {df.shape[1]} colunas.")
 
-            salvar_excel(df, pasta_saida, f"{nome_base}_{ontem.strftime('%Y%m%d')}")
+            salvar_excel(df, pasta_saida, f"{nome_base}_{ontem.strftime('%d_%m_%Y')}")
 
     except Exception as e:
         log_error(f"❌ Erro na execução: {e}")
